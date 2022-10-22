@@ -15,7 +15,12 @@ export default function (props) {
             </li>
             {
                 props.todoList.map((todo) => {
-                    return <TodoItem editTodo={props.editTodo} removeTodo={props.removeTodo} key={todo.id} todo={todo} />
+                    return <TodoItem
+                        handleChangeActive={props.handleChangeActive}
+                        editTodo={props.editTodo}
+                        removeTodo={props.removeTodo}
+                        key={todo.id}
+                        todo={todo} />
                 })
             }
         </ul>

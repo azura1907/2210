@@ -2,7 +2,12 @@ export default function (props) {
     return (
         <li className="list-group-item p-4 fs-4 align-items-center d-flex justify-content-between">
             <div className="content">
-                <input checked={props.todo.isActive} className="form-check-input me-1 p-2" type="checkbox" value="" id="firstCheckbox" />
+                <input
+                    onChange={(event) => {
+                        props.handleChangeActive(props.todo, event.target.checked);
+                    }}
+                    checked={props.todo.isActive}
+                    className="form-check-input me-1 p-2" type="checkbox" value="" id="firstCheckbox" />
                 <label className="form-check-label ms-5" for="firstCheckbox">{props.todo.todo}</label>
             </div>
             <div className="icon">

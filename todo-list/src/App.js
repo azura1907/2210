@@ -3,14 +3,9 @@ import TodoInput from "./components/TodoInput/TodoInput";
 import TodoList from "./components/TodoList/TodoList";
 
 function App() {
+  const todoListDefaultValue = localStorage.getItem('todoList');
 
-  const [todoList, setTodoList] = useState([
-    {
-      todo: 'Play dota2',
-      id: 'id-' + Math.random() * 99999,
-      isActive: false
-    }
-  ]);
+  const [todoList, setTodoList] = useState(todoListDefaultValue ? JSON.parse(todoListDefaultValue) : []);
 
   const [todoItem, setTodoItem] = useState('');
 
@@ -36,6 +31,8 @@ function App() {
         setTodoList(newTodoList);
         setTodoItem('');
         setEditItem(null);
+        localStorage.setItem('todoList', JSON.stringify(newTodoList));
+
       }
       // set gia tri moi cho todo list
       return;
@@ -51,6 +48,7 @@ function App() {
     newTodoList.push(newTodo);
     setTodoList(newTodoList);
     setTodoItem('');
+    localStorage.setItem('todoList', JSON.stringify(newTodoList));
   }
 
   const handleRemoveTodo = (todo) => {
@@ -62,12 +60,30 @@ function App() {
     if (todoIndex !== -1) {
       newTodoList.splice(todoIndex, 1);
       setTodoList(newTodoList);
+
+      localStorage.setItem('todoList', JSON.stringify(newTodoList));
+
     }
   }
 
   const handleEditTodo = (todo) => {
     setTodoItem(todo.todo);
     setEditItem(todo.id);
+  }
+
+  const handleChangeActive = (todo, activeValue) => {
+    const newTodoList = [...todoList];
+    const todoIndex = newTodoList.findIndex((todoElement) => {
+      return todo.id === todoElement.id
+    })
+
+    if (todoIndex !== -1) {
+      newTodoList[todoIndex].isActive = activeValue;
+      setTodoList(newTodoList);
+
+      localStorage.setItem('todoList', JSON.stringify(newTodoList));
+
+    }
   }
 
   const filteredTodoList = [...todoList].filter((todo) => {
@@ -91,7 +107,13 @@ function App() {
           handleAddClick={handleAddTodo}
           handleInputChange={setTodoItem}
           inputValue={todoItem} />
-        <TodoList search={search} setSearch={setSearch} editTodo={handleEditTodo} todoList={filteredTodoList} removeTodo={handleRemoveTodo} />
+        <TodoList
+          handleChangeActive={handleChangeActive}
+          search={search}
+          setSearch={setSearch}
+          editTodo={handleEditTodo}
+          todoList={filteredTodoList}
+          removeTodo={handleRemoveTodo} />
       </div>
     </div>
   );
